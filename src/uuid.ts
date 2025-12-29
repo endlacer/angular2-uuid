@@ -7,7 +7,9 @@ export class UUID {
     }
 
     public static UUID(): string {
-        if (typeof (window) !== "undefined" && typeof (window.crypto) !== "undefined" && typeof (window.crypto.getRandomValues) !== "undefined") {
+        if (typeof (window) !== "undefined" && typeof (window.crypto) !== "undefined" && typeof (window.crypto.randomUUID) === "function") {
+            return window.crypto.randomUUID();
+        } else if (typeof (window) !== "undefined" && typeof (window.crypto) !== "undefined" && typeof (window.crypto.getRandomValues) === "function") {
             // If we have a cryptographically secure PRNG, use that
             // http://stackoverflow.com/questions/6906916/collisions-when-generating-uuids-in-javascript
             let buf: Uint16Array = new Uint16Array(8);
@@ -29,7 +31,7 @@ export class UUID {
         }
         return ret;
     }
-    
+
     private static random4(): string {
         return Math.floor((1 + Math.random()) * 0x10000)
             .toString(16)
